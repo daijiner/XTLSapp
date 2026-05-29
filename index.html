@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>学体联赛 · 学生端</title>
+  <style>
+    :root {
+      --primary: #1B6F3D;
+      --primary-dark: #0F2A1D;
+      --accent: #16A34A;
+      --accent-light: #DCFCE7;
+      --gold: #FFB626;
+      --gold-light: #FEF3C7;
+      --bg: #F5F6F8;
+      --card: #FFFFFF;
+      --text: #1A1A1A;
+      --text-secondary: #666666;
+      --text-tertiary: #999999;
+      --border: #E5E7EB;
+      --danger: #EF4444;
+      --info: #3B82F6;
+      --warning: #F59E0B;
+      --radius: 16px;
+      --radius-sm: 12px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #e8e8e8;
+      color: var(--text);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .phone-frame {
+      max-width: 414px;
+      height: 100vh;
+      margin: 0 auto;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 40px rgba(0,0,0,0.15);
+    }
+
+    .status-bar {
+      height: 44px;
+      background: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .page {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: none;
+      padding-bottom: 90px;
+    }
+    .page.active { display: block; }
+    .page::-webkit-scrollbar { display: none; }
+
+    /* Header styles */
+    .home-header {
+      background: var(--primary-dark);
+      color: #fff;
+      padding: 16px 16px 20px;
+      position: relative;
+    }
+    .home-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .home-header-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+    }
+    .user-info h2 { font-size: 20px; font-weight: 700; }
+    .user-info .school-info {
+      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+      margin-top: 2px;
+    }
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .header-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+
+    .star-rating-bar {
+      margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.08);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+    }
+    .star-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .star-item .label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+    }
+    .star-display {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .star { font-size: 16px; color: var(--gold); }
+    .star-num {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-left: 4px;
+    }
+
+    /* Section titles */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 16px;
+      margin: 20px 0 10px;
+    }
+    .section-title {
+      font-size: 17px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .section-more {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      text-decoration: none;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      margin: 0 16px 12px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    /* Quick nav pills */
+    .quick-nav {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 4px 16px 12px;
+      scrollbar-width: none;
+    }
+    .quick-nav::-webkit-scrollbar { display: none; }
+    .pill {
+      flex-shrink: 0;
+      padding: 8px 14px;
+      border-radius: 20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+    .pill.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .pill .live-dot {
+      width: 6px; height: 6px;
+      background: var(--danger);
+      border-radius: 50%;
+    }
+
+    /* Season card */
+    .season-card {
+      background: var(--primary);
+      color: #fff;
+      border-radius: var(--radius);
+      margin: 0 16px 12px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .season-card h3 { font-size: 18px; font-weight: 700; }
+    .season-card .season-sub { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+    .season-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .season-stat {
+      background: rgba(255,255,255,0.12);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+    }
+    .season-stat .val { font-size: 20px; font-weight: 700; }
+    .season-stat .lab { font-size: 11px; opacity: 0.7; margin-top: 2px; }
+    .season-points-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.15);
+    }
+    .season-points-row .pts { font-size: 22px; font-weight: 700; }
+    .season-points-row .detail-btn {
+      font-size: 12px;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+    }
+
+    /* Task card */
+    .task-card .task-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .task-card .task-reward {
+      font-size: 12px;
+      color: var(--accent);
+      background: var(--accent-light);
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 10px;
+      margin-top: 6px;
+    }
+    .task-groups {
+      display: flex;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .task-group {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      border-radius: 10px;
+      background: var(--bg);
+      font-size: 12px;
+    }
+    .task-group.done { background: var(--accent-light); color: var(--accent); }
+    .task-group.current { background: var(--gold-light); color: #B45309; border: 1px solid var(--gold); }
+    .task-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      flex: 1;
+      padding: 11px;
+      border-radius: 10px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+
+    /* Schedule list */
+    .schedule-list {}
+    .schedule-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .schedule-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .schedule-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: var(--accent-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .schedule-info { flex: 1; }
+    .schedule-info .name { font-size: 14px; font-weight: 600; }
+    .schedule-info .meta { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+    .schedule-status {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+    .status-confirmed { background: var(--accent-light); color: var(--accent); }
+    .status-pending { background: var(--gold-light); color: #B45309; }
+
+    /* Notice card */
+    .notice-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .notice-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .notice-badge {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--primary);
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .notice-content { flex: 1; }
+    .notice-title { font-size: 14px; font-weight: 600; }
+    .notice-desc { font-size: 12px; color: var(--text-secondary); margin-top: 3px; line-height: 1.4; }
+    .notice-time { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; }
+
+    /* News card */
+    .news-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .news-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .news-thumb {
+      width: 80px; height: 60px;
+      border-radius: 8px;
+      background: var(--bg);
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      overflow: hidden;
+    }
+    .news-content { flex: 1; }
+    .news-title { font-size: 14px; font-weight: 600; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .news-meta { font-size: 11px; color: var(--text-tertiary); margin-top: 6px; display: flex; gap: 8px; }
+
+    /* Page header for sub pages */
+    .page-header {
+      background: var(--card);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-header h1 { font-size: 18px; font-weight: 700; }
+    .page-header .header-action { font-size: 14px; color: var(--primary); text-decoration: none; }
+
+    .search-box {
+      margin: 12px 16px;
+      position: relative;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 10px 12px 10px 36px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 14px;
+      outline: none;
+    }
+    .search-box::before {
+      content: "🔍";
+      position: absolute;
+      left: 12px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      padding: 0 16px 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .filter-tabs::-webkit-scrollbar { display: none; }
+    .filter-tab {
+      flex-shrink: 0;
+      padding: 6px 14px;
+      border-radius: 16px;
+      background: var(--bg);
+      font-size: 13px;
+      border: none;
+      cursor: pointer;
+      color: var(--text-secondary);
+    }
+    .filter-tab.active { background: var(--primary); color: #fff; }
+
+    /* Event cards */
+    .event-card {
+      padding: 0;
+      overflow: hidden;
+    }
+    .event-body {
+      display: flex;
+      gap: 12px;
+      padding: 16px 16px 12px;
+    }
+    .event-icon {
+      width: 56px; height: 56px;
+      border-radius: 20px;
+      background: var(--accent-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+    .event-info { flex: 1; min-width: 0; }
+    .event-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .event-name { font-size: 16px; font-weight: 700; line-height: 1.3; }
+    .event-status {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .event-meta { font-size: 13px; color: var(--text-secondary); margin-top: 6px; }
+    .event-points {
+      display: inline-block;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: var(--gold-light);
+      color: #B45309;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+    .event-actions-bar {
+      display: flex;
+      border-top: 1px dashed var(--border);
+      margin-top: 4px;
+    }
+    .action-btn {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      background: none;
+      font-size: 14px;
+      cursor: pointer;
+      text-align: center;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .action-btn.primary {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      border-radius: 0 0 var(--radius) 0;
+    }
+    .action-divider {
+      width: 1px;
+      background: var(--border);
+    }
+
+    /* Profile page */
+    .profile-header {
+      background: var(--card);
+      padding: 20px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .profile-stats-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      width: 100%;
+      margin-top: 4px;
+    }
+    .profile-left { flex: 1; min-width: 0; }
+    .profile-avatar {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+    }
+    .profile-name {
+      font-size: 18px;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+    .profile-level {
+      display: inline-block;
+      font-size: 11px;
+      background: var(--gold-light);
+      color: #B45309;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+    .profile-school { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+    .profile-sports {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+      align-items: flex-start;
+    }
+    .profile-digital {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .digital-avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2), 0 4px 12px rgba(102, 126, 234, 0.3);
+      position: relative;
+    }
+    .digital-avatar::after {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 2px dashed rgba(102, 126, 234, 0.4);
+      animation: spin 8s linear infinite;
+    }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .digital-label {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+    .sport-tag {
+      font-size: 12px;
+      background: var(--bg);
+      padding: 4px 10px;
+      border-radius: 10px;
+    }
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      padding: 16px;
+    }
+    .profile-stat {
+      background: var(--card);
+      border-radius: var(--radius-sm);
+      padding: 12px 6px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .profile-stat .num { font-size: 20px; font-weight: 700; color: var(--primary); }
+    .profile-stat .lab { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+    /* Quick entries grid */
+    .quick-entries {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      padding: 16px;
+    }
+    .quick-entry {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .quick-entry-icon {
+      width: 48px; height: 48px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      background: var(--bg);
+    }
+    .quick-entry-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* Health data */
+    .health-section { padding: 0 16px; }
+    .health-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .health-item {
+      background: var(--card);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+    .health-item .h-label { font-size: 12px; color: var(--text-secondary); }
+    .health-item .h-val {
+      font-size: 22px;
+      font-weight: 700;
+      margin-top: 6px;
+      color: var(--primary);
+    }
+    .health-item .h-val.stars { font-size: 18px; color: var(--gold); }
+    .health-item .h-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; }
+    .health-date {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      background: var(--bg);
+      padding: 4px 10px;
+      border-radius: 10px;
+    }
+
+    .radar-section {
+      margin: 16px;
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+    .radar-section h4 { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+    #radarCanvas { max-width: 100%; }
+
+    /* Course page */
+    .aibot-section {
+      margin: 16px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      border-radius: var(--radius);
+      padding: 16px;
+      color: #fff;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+    .aibot-avatar {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+    .aibot-text { flex: 1; }
+    .aibot-text .greeting { font-size: 14px; font-weight: 600; }
+    .aibot-text .desc { font-size: 12px; opacity: 0.85; margin-top: 4px; line-height: 1.5; }
+    .aibot-arrow { font-size: 20px; opacity: 0.7; }
+
+    .course-categories {
+      padding: 0 16px;
+    }
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .category-item {
+      background: var(--card);
+      border-radius: var(--radius-sm);
+      padding: 14px 6px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+    .category-item .cat-icon { font-size: 26px; }
+    .category-item .cat-name { font-size: 12px; font-weight: 600; margin-top: 6px; }
+    .category-item .cat-count { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+
+    .course-section { margin-top: 16px; }
+    .course-list { padding: 0 16px; }
+    .course-item {
+      display: flex;
+      gap: 12px;
+      background: var(--card);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow);
+    }
+    .course-thumb {
+      width: 100px; height: 70px;
+      border-radius: 8px;
+      background: var(--bg);
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px;
+      overflow: hidden;
+    }
+    .course-info { flex: 1; }
+    .course-title { font-size: 14px; font-weight: 600; line-height: 1.4; }
+    .course-meta { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+    .course-tags { display: flex; gap: 6px; margin-top: 6px; }
+    .course-tag-free { background: var(--accent-light); color: var(--accent); font-size: 11px; padding: 2px 6px; border-radius: 4px; }
+    .course-tag-vip { background: var(--gold-light); color: #B45309; font-size: 11px; padding: 2px 6px; border-radius: 4px; }
+
+    .ai-sport-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 0 16px;
+    }
+    .ai-sport-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+    .ai-sport-name { font-size: 15px; font-weight: 600; }
+    .ai-sport-icon { font-size: 40px; }
+    .expand-more-btn {
+      margin: 12px 16px 0;
+      padding: 10px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary);
+      background: var(--card);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+
+    /* Equipment page */
+    .equip-section { margin-bottom: 16px; }
+    .equip-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 16px;
+      margin-bottom: 10px;
+    }
+    .equip-header h3 { font-size: 16px; font-weight: 700; }
+    .equip-header .add-btn {
+      font-size: 13px;
+      color: var(--primary);
+      background: var(--accent-light);
+      padding: 4px 10px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .equip-list { padding: 0 16px; }
+    .equip-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--card);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow);
+    }
+    .equip-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .equip-info { flex: 1; }
+    .equip-name { font-size: 14px; font-weight: 600; }
+    .equip-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+    .equip-status {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    .equip-status.connected { background: var(--accent-light); color: var(--accent); }
+    .equip-status.offline { background: var(--bg); color: var(--text-tertiary); }
+    .equip-noncomm-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      padding: 0 16px;
+    }
+    .equip-noncomm-grid .equip-item {
+      margin-bottom: 0;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .equip-noncomm-grid .equip-status { align-self: flex-start; }
+
+    .shop-entry {
+      margin: 16px;
+      background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+      border-radius: var(--radius);
+      padding: 20px;
+      color: #fff;
+      text-align: center;
+      cursor: pointer;
+    }
+    .shop-entry h3 { font-size: 18px; font-weight: 700; }
+    .shop-entry p { font-size: 13px; opacity: 0.9; margin-top: 6px; }
+    .shop-platforms {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 14px;
+    }
+    .shop-platform {
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Bottom nav */
+    .bottom-nav {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 64px;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      padding: 6px 12px;
+      border: none;
+      background: none;
+      color: var(--text-tertiary);
+      font-size: 11px;
+      transition: color 0.2s;
+    }
+    .nav-item.active { color: var(--primary); }
+    .nav-item .nav-icon { font-size: 22px; line-height: 1; }
+
+    /* Misc */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-tertiary);
+    }
+    .empty-state .icon { font-size: 48px; margin-bottom: 10px; }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-row .lab { color: var(--text-secondary); }
+
+    .menu-list { padding: 0 16px; }
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--card);
+      padding: 14px 16px;
+      margin-bottom: 1px;
+    }
+    .menu-item:first-child { border-radius: var(--radius) var(--radius) 0 0; }
+    .menu-item:last-child { border-radius: 0 0 var(--radius) var(--radius); margin-bottom: 12px; }
+    .menu-icon { font-size: 20px; width: 28px; text-align: center; }
+    .menu-text { flex: 1; font-size: 14px; }
+    .menu-sub { font-size: 12px; color: var(--text-tertiary); }
+    .menu-arrow { color: var(--text-tertiary); font-size: 14px; }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--bg);
+      border-radius: 3px;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+<div class="phone-frame">
+  <div class="status-bar">
+    <span>9:41</span>
+    <span>🔋 100%</span>
+  </div>
+
+  <!-- ===== 首页 ===== -->
+  <div class="page active" id="page-home">
+    <div class="home-header">
+      <div class="home-header-top">
+        <div class="home-header-user">
+          <div class="avatar">🧑‍🎓</div>
+          <div class="user-info">
+            <h2>王小明</h2>
+            <div class="school-info">北京四中 · 初一 3班</div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="header-btn">🔔</button>
+          <button class="header-btn">⚙️</button>
+        </div>
+      </div>
+      <div class="star-rating-bar">
+        <div class="star-item">
+          <span class="label">今日</span>
+          <div class="star-display">
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+          </div>
+        </div>
+        <div class="star-item">
+          <span class="label">当月</span>
+          <span class="star-num">89颗⭐</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">🪢 今日任务</div>
+    </div>
+    <div class="card task-card" style="position:relative;">
+      <a href="#" style="position:absolute;top:16px;right:16px;font-size:13px;color:#1B6F3D;font-weight:600;text-decoration:none;">任务记录 ›</a>
+      <div class="task-title">跳绳训练</div>
+      <div class="task-groups">
+        <div class="task-group current" style="background:none;border:none;font-size:16px;">5 分钟跳绳 · 3 组</div>
+      </div>
+      <div class="task-actions">
+        <button class="btn btn-primary">去完成</button>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">📅 我的赛程</div>
+      <a href="#" class="section-more">全部 ›</a>
+    </div>
+    <div class="card schedule-list">
+      <div class="schedule-item">
+        <div class="schedule-icon">🏃</div>
+        <div class="schedule-info">
+          <div class="name">短跑 100m 预选赛</div>
+          <div class="meta">05-28 · 15:30</div>
+        </div>
+        <span class="schedule-status" style="background:#F3F4F6;color:#666;">详情</span>
+      </div>
+      <div class="schedule-item">
+        <div class="schedule-icon">🪢</div>
+        <div class="schedule-info">
+          <div class="name">跳绳团体赛</div>
+          <div class="meta">06-10 · 报名中</div>
+        </div>
+        <span class="schedule-status" style="background:#F3F4F6;color:#666;">详情</span>
+      </div>
+      <div class="schedule-item">
+        <div class="schedule-icon">🏀</div>
+        <div class="schedule-info">
+          <div class="name">三人篮球 · 周末赛</div>
+          <div class="meta">06-05 · 09:00</div>
+        </div>
+        <span class="schedule-status" style="background:#F3F4F6;color:#666;">详情</span>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">📢 公告</div>
+      <a href="#" class="section-more">更多 ›</a>
+    </div>
+    <div class="card">
+      <div class="notice-item">
+        <div class="notice-badge">📢</div>
+        <div class="notice-content">
+          <div class="notice-title">关于26-27赛季赛制调整的通知</div>
+          <div class="notice-desc">本赛季跳绳项目评分标准有所调整，请各位参赛选手及时查阅最新规则文档。</div>
+          <div class="notice-time">今天 08:30</div>
+        </div>
+      </div>
+      <div class="notice-item">
+        <div class="notice-badge">🏆</div>
+        <div class="notice-content">
+          <div class="notice-title">三人篮球周末赛报名即将截止</div>
+          <div class="notice-desc">北京赛区三人篮球周末赛报名将于6月1日截止，尚未报名的队伍请尽快完成报名。</div>
+          <div class="notice-time">昨天 16:00</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">📰 新闻</div>
+      <a href="#" class="section-more">更多 ›</a>
+    </div>
+    <div class="card">
+      <div class="news-item">
+        <div class="news-thumb">🏃</div>
+        <div class="news-content">
+          <div class="news-title">全国学生健康活力大赛总决赛圆满落幕，北京四中斩获佳绩</div>
+          <div class="news-meta"><span>学体联官方</span><span>3.2万阅读</span></div>
+        </div>
+      </div>
+      <div class="news-item">
+        <div class="news-thumb">🏊</div>
+        <div class="news-content">
+          <div class="news-title">游泳项目新纪录诞生！初一学生打破尘封三年校记录</div>
+          <div class="news-meta"><span>校园体育</span><span>1.8万阅读</span></div>
+        </div>
+      </div>
+      <div class="news-item">
+        <div class="news-thumb">🏀</div>
+        <div class="news-content">
+          <div class="news-title">三人篮球联赛新规则解读：这些变化你必须知道</div>
+          <div class="news-meta"><span>赛事资讯</span><span>9千阅读</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 赛事 ===== -->
+  <div class="page" id="page-events">
+    <div class="search-box">
+      <input type="text" placeholder="请输入比赛名称">
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab active">全部</button>
+      <button class="filter-tab">报名中</button>
+      <button class="filter-tab">已报名</button>
+      <button class="filter-tab">进行中</button>
+    </div>
+
+    <div class="card event-card">
+      <div class="event-body">
+        <div class="event-icon">🏃</div>
+        <div class="event-info">
+          <div class="event-header-row">
+            <div class="event-name">短跑 100m 预选赛</div>
+            <span class="event-status" style="background:#DCFCE7;color:#16A34A;">已报名</span>
+          </div>
+          <div class="event-meta">📍 北京 · 05-28 比赛</div>
+          <div class="event-points">⚡ +10 报名积分</div>
+        </div>
+      </div>
+      <div class="event-actions-bar">
+        <button class="action-btn">查看详情</button>
+        <div class="action-divider"></div>
+        <button class="action-btn" style="color:var(--text);">取消报名</button>
+      </div>
+    </div>
+
+    <div class="card event-card">
+      <div class="event-body">
+        <div class="event-icon">🏊</div>
+        <div class="event-info">
+          <div class="event-header-row">
+            <div class="event-name">游泳接力赛</div>
+            <span class="event-status" style="background:#DBEAFE;color:#3B82F6;">可报名</span>
+          </div>
+          <div class="event-meta">📍 北京 · 06-15 截止报名</div>
+          <div class="event-points">⚡ +100 冠军积分</div>
+        </div>
+      </div>
+      <div class="event-actions-bar">
+        <button class="action-btn">查看详情</button>
+        <div class="action-divider"></div>
+        <button class="action-btn primary">立即报名</button>
+      </div>
+    </div>
+
+    <div class="card event-card">
+      <div class="event-body">
+        <div class="event-icon">🏀</div>
+        <div class="event-info">
+          <div class="event-header-row">
+            <div class="event-name">三人篮球联赛</div>
+            <span class="event-status" style="background:#DBEAFE;color:#3B82F6;">可报名</span>
+          </div>
+          <div class="event-meta">📍 北京 · 06-05 比赛</div>
+          <div class="event-points">⚡ +80 冠军积分</div>
+        </div>
+      </div>
+      <div class="event-actions-bar">
+        <button class="action-btn">查看详情</button>
+        <div class="action-divider"></div>
+        <button class="action-btn primary">立即报名</button>
+      </div>
+    </div>
+
+    <div class="card event-card">
+      <div class="event-body">
+        <div class="event-icon">🪢</div>
+        <div class="event-info">
+          <div class="event-header-row">
+            <div class="event-name">跳绳团体赛</div>
+            <span class="event-status" style="background:#FEF3C7;color:#B45309;">待确认</span>
+          </div>
+          <div class="event-meta">📍 北京 · 06-10 截止</div>
+          <div class="event-points">⚡ +10 参与积分</div>
+        </div>
+      </div>
+      <div class="event-actions-bar">
+        <button class="action-btn">查看详情</button>
+        <div class="action-divider"></div>
+        <button class="action-btn" style="color:var(--text);">取消报名</button>
+      </div>
+    </div>
+
+    <div class="card event-card">
+      <div class="event-body">
+        <div class="event-icon">🏐</div>
+        <div class="event-info">
+          <div class="event-header-row">
+            <div class="event-name">排球友谊赛</div>
+            <span class="event-status" style="background:#DBEAFE;color:#3B82F6;">可报名</span>
+          </div>
+          <div class="event-meta">📍 通州 · 06-22 比赛</div>
+          <div class="event-points">⚡ +60 冠军积分</div>
+        </div>
+      </div>
+      <div class="event-actions-bar">
+        <button class="action-btn">查看详情</button>
+        <div class="action-divider"></div>
+        <button class="action-btn primary">立即报名</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 我的空间 ===== -->
+  <div class="page" id="page-profile">
+    <div class="profile-header">
+      <div class="profile-left">
+        <div class="profile-name">王小明</div>
+        <div class="profile-school">北京四中 · 初一 3 班</div>
+        <div class="profile-sports">
+          <span class="sport-tag">🏃 田径 100m · 11级</span>
+          <span class="sport-tag">🏀 篮球 · 12级</span>
+          <span class="sport-tag">🤸 体操 · 12级</span>
+        </div>
+      </div>
+      <div class="profile-digital">
+        <div class="digital-avatar">🧍</div>
+        <span class="digital-label">数字孪生</span>
+      </div>
+      <div class="profile-stats-row">
+        <div class="profile-stat">
+          <div class="num">1732</div>
+          <div class="lab">总积分</div>
+        </div>
+        <div class="profile-stat">
+          <div class="num">320</div>
+          <div class="lab">赛季积分</div>
+        </div>
+        <div class="profile-stat">
+          <div class="num">4</div>
+          <div class="lab">参赛</div>
+        </div>
+        <div class="profile-stat">
+          <div class="num">2</div>
+          <div class="lab">奖项</div>
+        </div>
+        <div class="profile-stat">
+          <div class="num">#12</div>
+          <div class="lab">年级排名</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-entries" style="margin-top:8px;">
+      <div class="quick-entry">
+        <div class="quick-entry-icon" style="background:#DCFCE7;">🏃</div>
+        <div class="quick-entry-label">我的赛事</div>
+      </div>
+      <div class="quick-entry">
+        <div class="quick-entry-icon" style="background:#FEF3C7;">📜</div>
+        <div class="quick-entry-label">我的证书</div>
+      </div>
+      <div class="quick-entry">
+        <div class="quick-entry-icon" style="background:#F3E8FF;">🧠</div>
+        <div class="quick-entry-label">心理健康</div>
+      </div>
+      <div class="quick-entry">
+        <div class="quick-entry-icon" style="background:#DBEAFE;">🤖</div>
+        <div class="quick-entry-label">运动处方</div>
+      </div>
+      <div class="quick-entry">
+        <div class="quick-entry-icon" style="background:#FCE7F3;">📊</div>
+        <div class="quick-entry-label">健康报告</div>
+      </div>
+      <div class="quick-entry">
+        <div class="quick-entry-icon" style="background:#ECFCCB;">📹</div>
+        <div class="quick-entry-label">课程中心</div>
+      </div>
+      <div class="quick-entry">
+        <div class="quick-entry-icon" style="background:#CFFAFE;">🎒</div>
+        <div class="quick-entry-label">装备中心</div>
+      </div>
+      <div class="quick-entry">
+        <div class="quick-entry-icon" style="background:#FEE2E2;">🎁</div>
+        <div class="quick-entry-label">积分兑换</div>
+      </div>
+    </div>
+
+
+
+    <div class="section-header">
+      <div class="section-title">❤️ 我的健康数据</div>
+      <div class="health-date" onclick="alert('健康日历功能即将上线')">
+        <span id="healthDate">05-29</span>
+        <span style="font-size:16px;">📅</span>
+      </div>
+    </div>
+    <div class="health-section">
+      <div class="health-grid">
+        <div class="health-item">
+          <div class="h-label">综合评分</div>
+          <div class="h-val stars">⭐⭐⭐⭐⭐</div>
+          <div class="h-sub">优秀</div>
+        </div>
+        <div class="health-item">
+          <div class="h-label">睡眠分数</div>
+          <div class="h-val">85</div>
+          <div class="h-sub">昨晚 7h 32m</div>
+        </div>
+        <div class="health-item">
+          <div class="h-label">身体能量</div>
+          <div class="h-val">92</div>
+          <div class="h-sub">精力充沛</div>
+        </div>
+        <div class="health-item">
+          <div class="h-label">压力指数</div>
+          <div class="h-val" style="color:var(--warning)">32</div>
+          <div class="h-sub">轻度压力</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <div style="font-size:14px;font-weight:600;margin-bottom:8px;">运动强度达标</div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-secondary);">
+        <span>本周 142 分钟 / 目标 180 分钟</span>
+        <span style="color:var(--primary);font-weight:600;">79%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width:79%;"></div>
+      </div>
+    </div>
+
+    <div class="radar-section">
+      <h4>身体素质 · 五维雷达图</h4>
+      <canvas id="radarCanvas" width="300" height="260"></canvas>
+    </div>
+
+    <div style="padding: 0 16px 20px;">
+      <button class="btn btn-primary" style="width:100%;" onclick="alert('精准运动健康报告功能即将上线')">📋 精准运动健康报告</button>
+    </div>
+
+  </div>
+
+  <!-- ===== 课程 ===== -->
+  <div class="page" id="page-courses">
+    <div class="aibot-section" onclick="alert('AI体宝问答功能即将上线')">
+      <div class="aibot-avatar">🤖</div>
+      <div class="aibot-text">
+        <div class="greeting">你好，我是体宝 👋</div>
+        <div class="desc">待时机成熟，我可以为您定制科学的运动处方～</div>
+      </div>
+      <div class="aibot-arrow">›</div>
+    </div>
+
+    <div style="padding: 16px 16px 0; font-size: 18px; font-weight: 700;">课程中心</div>
+    <div class="search-box">
+      <input type="text" placeholder="输入体育项目名称搜索课程">
+    </div>
+
+    <div class="course-categories" style="margin-top:12px;">
+      <div class="category-grid">
+        <div class="category-item">
+          <div class="cat-icon">💪</div>
+          <div class="cat-name">安全</div>
+        </div>
+        <div class="category-item">
+          <div class="cat-icon">⚽</div>
+          <div class="cat-name">足球</div>
+        </div>
+        <div class="category-item">
+          <div class="cat-icon">🏀</div>
+          <div class="cat-name">篮球</div>
+        </div>
+        <div class="category-item">
+          <div class="cat-icon">🏐</div>
+          <div class="cat-name">排球</div>
+        </div>
+        <div class="category-item">
+          <div class="cat-icon">🏓</div>
+          <div class="cat-name">体能</div>
+        </div>
+        <div class="category-item">
+          <div class="cat-icon">🤸</div>
+          <div class="cat-name">体操</div>
+        </div>
+        <div class="category-item">
+          <div class="cat-icon">🪢</div>
+          <div class="cat-name">跳绳</div>
+        </div>
+        <div class="category-item">
+          <div class="cat-icon">⚫</div>
+          <div class="cat-name">围棋</div>
+        </div>
+      </div>
+      <div class="category-grid" id="extraCategories" style="display:none;margin-top:10px;">
+        <div class="category-item">
+          <div class="cat-icon">🚣</div>
+          <div class="cat-name">划船机</div>
+        </div>
+        <div class="category-item">
+          <div class="cat-icon">🥎</div>
+          <div class="cat-name">匹克球</div>
+        </div>
+        <div class="category-item">
+          <div class="cat-icon">🥋</div>
+          <div class="cat-name">武术</div>
+        </div>
+        <div class="category-item">
+          <div class="cat-icon">🥏</div>
+          <div class="cat-name">飞盘</div>
+        </div>
+        <div class="category-item">
+          <div class="cat-icon">♟️</div>
+          <div class="cat-name">中国象棋</div>
+        </div>
+        <div class="category-item">
+          <div class="cat-icon">⚪</div>
+          <div class="cat-name">五子棋</div>
+        </div>
+        <div class="category-item">
+          <div class="cat-icon">🏸</div>
+          <div class="cat-name">踢毽子</div>
+        </div>
+      </div>
+    </div>
+    <div class="expand-more-btn" onclick="toggleCategories()">展开更多</div>
+
+    <div class="section-header">
+      <div class="section-title">🤖 AI运动</div>
+    </div>
+    <div class="ai-sport-grid">
+      <div class="ai-sport-card">
+        <span class="ai-sport-name">跳绳</span>
+        <span class="ai-sport-icon">🪢</span>
+      </div>
+      <div class="ai-sport-card">
+        <span class="ai-sport-name">跑步</span>
+        <span class="ai-sport-icon">🏃</span>
+      </div>
+      <div class="ai-sport-card">
+        <span class="ai-sport-name">深蹲</span>
+        <span class="ai-sport-icon">🏋️</span>
+      </div>
+      <div class="ai-sport-card">
+        <span class="ai-sport-name">俯卧撑</span>
+        <span class="ai-sport-icon">🤸</span>
+      </div>
+      <div class="ai-sport-card">
+        <span class="ai-sport-name">开合跳</span>
+        <span class="ai-sport-icon">🙆</span>
+      </div>
+      <div class="ai-sport-card">
+        <span class="ai-sport-name">仰卧起坐</span>
+        <span class="ai-sport-icon">🛌</span>
+      </div>
+      <div class="ai-sport-card">
+        <span class="ai-sport-name">引体向上</span>
+        <span class="ai-sport-icon">🤾</span>
+      </div>
+      <div class="ai-sport-card">
+        <span class="ai-sport-name">推举</span>
+        <span class="ai-sport-icon">🏋️‍♂️</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 装备 ===== -->
+  <div class="page" id="page-equip">
+
+    <div class="equip-section">
+      <div class="equip-header">
+        <h3>📱 我的装备</h3>
+        <a href="#" class="add-btn">+ 新增</a>
+      </div>
+      <div class="equip-list">
+        <div class="equip-item">
+          <div class="equip-icon">⌚</div>
+          <div class="equip-info">
+            <div class="equip-name">体评手Pro</div>
+            <div class="equip-desc">通信设备 · 上次同步 10 分钟前</div>
+          </div>
+          <span class="equip-status connected">已连接</span>
+        </div>
+        <div class="equip-item">
+          <div class="equip-icon">🪢</div>
+          <div class="equip-info">
+            <div class="equip-name">蓝牙跳绳01</div>
+            <div class="equip-desc">通信设备 · 于 2025-01 开始使用</div>
+          </div>
+          <span class="equip-status" style="background:#FEE2E2;color:#EF4444;">断开</span>
+        </div>
+      </div>
+      <div class="equip-noncomm-grid">
+        <div class="equip-item">
+          <div class="equip-icon">🏀</div>
+          <div class="equip-info">
+            <div class="equip-name">斯伯丁篮球</div>
+            <div class="equip-desc">于 2025-01 开始使用</div>
+          </div>
+        </div>
+        <div class="equip-item">
+          <div class="equip-icon">👟</div>
+          <div class="equip-info">
+            <div class="equip-name">碳板竞速跑鞋</div>
+            <div class="equip-desc">于 2025-04 开始使用</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="shop-entry" onclick="showShopModal()">
+      <h3>🛒 购买新装备</h3>
+      <p>点击前往合作商城选购运动装备</p>
+      <div class="shop-platforms">
+        <span class="shop-platform">抖音商城</span>
+        <span class="shop-platform">京东</span>
+        <span class="shop-platform">淘宝</span>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">⭐ 推荐装备</div>
+    </div>
+    <div class="card">
+      <div class="news-item">
+        <div class="news-thumb">⌚</div>
+        <div class="news-content">
+          <div class="news-title">学生党智能穿戴选购指南：这些功能最实用</div>
+          <div class="news-meta"><span>装备推荐</span><span>1.2万阅读</span></div>
+        </div>
+      </div>
+      <div class="news-item">
+        <div class="news-thumb">👟</div>
+        <div class="news-content">
+          <div class="news-title">青少年跑鞋怎么选？足型与缓震的科学搭配</div>
+          <div class="news-meta"><span>装备科普</span><span>8千阅读</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Bottom Nav ===== -->
+  <div class="bottom-nav">
+    <button class="nav-item active" data-page="page-home">
+      <span class="nav-icon">🏠</span>
+      <span>首页</span>
+    </button>
+    <button class="nav-item" data-page="page-events">
+      <span class="nav-icon">🏆</span>
+      <span>赛事</span>
+    </button>
+    <button class="nav-item" data-page="page-profile">
+      <span class="nav-icon">🧑‍🎓</span>
+      <span>我的空间</span>
+    </button>
+    <button class="nav-item" data-page="page-courses">
+      <span class="nav-icon">📹</span>
+      <span>课程</span>
+    </button>
+    <button class="nav-item" data-page="page-equip">
+      <span class="nav-icon">🎒</span>
+      <span>装备</span>
+    </button>
+  </div>
+
+  <!-- Shop Modal -->
+  <div id="shopModal" style="display:none;position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:var(--radius);padding:24px;width:80%;max-width:300px;text-align:center;">
+      <div style="font-size:36px;margin-bottom:12px;">🛒</div>
+      <h3 style="font-size:17px;margin-bottom:8px;">选择商城</h3>
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">将跳转至第三方平台完成购买</p>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button class="btn btn-primary" onclick="window.open('https://www.douyin.com','_blank')">抖音商城</button>
+        <button class="btn btn-secondary" onclick="window.open('https://www.jd.com','_blank')">京东</button>
+        <button class="btn btn-secondary" onclick="window.open('https://www.taobao.com','_blank')">淘宝</button>
+        <button class="btn btn-secondary" style="color:var(--text-secondary);" onclick="document.getElementById('shopModal').style.display='none'">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Set today's date for health data section
+  const today = new Date();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  const healthDateEl = document.getElementById('healthDate');
+  if (healthDateEl) healthDateEl.textContent = `${month}-${day}`;
+
+  // Page navigation
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const target = item.dataset.page;
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.getElementById(target).classList.add('active');
+      item.classList.add('active');
+    });
+  });
+
+  // Filter tabs
+  document.querySelectorAll('.filter-tabs').forEach(tabs => {
+    tabs.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  });
+
+  // Quick nav pills
+  document.querySelectorAll('.quick-nav').forEach(nav => {
+    nav.querySelectorAll('.pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        nav.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+      });
+    });
+  });
+
+  // Toggle extra categories
+  function toggleCategories() {
+    const el = document.getElementById('extraCategories');
+    const btn = document.querySelector('.expand-more-btn');
+    if (el.style.display === 'none') {
+      el.style.display = 'grid';
+      btn.textContent = '收起';
+    } else {
+      el.style.display = 'none';
+      btn.textContent = '展开更多';
+    }
+  }
+
+  // Shop modal
+  function showShopModal() {
+    document.getElementById('shopModal').style.display = 'flex';
+  }
+
+  // Draw radar chart
+  function drawRadar() {
+    const canvas = document.getElementById('radarCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = 300 * dpr;
+    canvas.height = 260 * dpr;
+    ctx.scale(dpr, dpr);
+
+    const cx = 150, cy = 125, r = 80;
+    const labels = ['力量', '耐力', '速度', '灵敏', '柔韧'];
+    const values = [78, 85, 92, 80, 70];
+    const max = 100;
+    const n = labels.length;
+
+    // Draw grid
+    ctx.strokeStyle = '#E5E7EB';
+    ctx.lineWidth = 1;
+    for (let level = 1; level <= 4; level++) {
+      ctx.beginPath();
+      for (let i = 0; i < n; i++) {
+        const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+        const dist = (r * level) / 4;
+        const x = cx + Math.cos(angle) * dist;
+        const y = cy + Math.sin(angle) * dist;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.stroke();
+    }
+
+    // Draw axes
+    for (let i = 0; i < n; i++) {
+      const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + Math.cos(angle) * r, cy + Math.sin(angle) * r);
+      ctx.stroke();
+    }
+
+    // Draw data
+    ctx.beginPath();
+    for (let i = 0; i < n; i++) {
+      const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+      const dist = (r * values[i]) / max;
+      const x = cx + Math.cos(angle) * dist;
+      const y = cy + Math.sin(angle) * dist;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(27, 111, 61, 0.2)';
+    ctx.fill();
+    ctx.strokeStyle = '#1B6F3D';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Draw points
+    for (let i = 0; i < n; i++) {
+      const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+      const dist = (r * values[i]) / max;
+      const x = cx + Math.cos(angle) * dist;
+      const y = cy + Math.sin(angle) * dist;
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#1B6F3D';
+      ctx.fill();
+    }
+
+    // Labels
+    ctx.font = '12px sans-serif';
+    ctx.fillStyle = '#666';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    for (let i = 0; i < n; i++) {
+      const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+      const lx = cx + Math.cos(angle) * (r + 18);
+      const ly = cy + Math.sin(angle) * (r + 18);
+      ctx.fillText(labels[i], lx, ly);
+      ctx.fillStyle = '#999';
+      ctx.font = '10px sans-serif';
+      ctx.fillText(values[i], lx, ly + 13);
+      ctx.fillStyle = '#666';
+      ctx.font = '12px sans-serif';
+    }
+  }
+
+  // Draw radar when profile page shown
+  const profileObserver = new MutationObserver((mutations) => {
+    mutations.forEach((m) => {
+      if (m.target.id === 'page-profile' && m.target.classList.contains('active')) {
+        setTimeout(drawRadar, 50);
+      }
+    });
+  });
+  profileObserver.observe(document.getElementById('page-profile'), { attributes: true, attributeFilter: ['class'] });
+
+  // Initial draw
+  setTimeout(drawRadar, 100);
+</script>
+</body>
+</html>
