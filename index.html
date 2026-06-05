@@ -71,6 +71,34 @@
     .page::-webkit-scrollbar { display: none; }
 
     /* Header styles */
+    .app-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 52px;
+      padding: 0 16px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+    .app-bar-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .app-bar.on-dark {
+      background: var(--primary-dark);
+      border-bottom: none;
+    }
+    .app-bar.on-dark .app-bar-title {
+      color: #fff;
+    }
     .home-header {
       background: var(--primary-dark);
       color: #fff;
@@ -138,13 +166,43 @@
       align-items: center;
       gap: 2px;
     }
-    .star { font-size: 16px; color: var(--gold); }
+    .star { font-size: 22px; color: var(--gold); text-shadow: 0 1px 4px rgba(245, 180, 0, 0.45); letter-spacing: 1px; }
     .star-num {
       font-size: 18px;
       font-weight: 700;
       color: var(--gold);
       margin-left: 4px;
     }
+    .stat-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: var(--radius-sm);
+      padding: 10px 6px 8px;
+      text-align: center;
+      box-shadow: none;
+    }
+    .stat-card .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.1;
+      letter-spacing: 0.3px;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-card .stat-label {
+      margin-top: 4px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.3px;
+    }
+
+
 
     /* Section titles */
     .section-header {
@@ -424,6 +482,47 @@
     }
     .filter-tab.active { background: var(--primary); color: #fff; }
 
+    /* Stage tabs (underline style) */
+    .stage-tabs {
+      display: flex;
+      align-items: stretch;
+      gap: 24px;
+      padding: 4px 16px 0;
+      background: #fff;
+      border-bottom: none;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .stage-tabs::-webkit-scrollbar { display: none; }
+    .stage-tab {
+      flex-shrink: 0;
+      position: relative;
+      padding: 12px 0 14px;
+      font-size: 15px;
+      color: var(--text-secondary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.2px;
+      transition: color .2s;
+    }
+    .stage-tab.active {
+      color: var(--text);
+      font-weight: 700;
+    }
+    .stage-tab.active::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 22px;
+      height: 3px;
+      border-radius: 3px;
+      background: var(--primary);
+    }
+
+
     /* Event cards */
     .event-card {
       padding: 0;
@@ -495,6 +594,115 @@
       width: 1px;
       background: var(--border);
     }
+
+    /* My match list - refined layout */
+    .my-match-card {
+      padding: 0;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .mm-header {
+      padding: 16px 18px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, #FAFBF9 0%, #FFFFFF 100%);
+    }
+    .mm-header-mark {
+      width: 3px; height: 16px;
+      border-radius: 2px;
+      background: var(--primary);
+    }
+    .mm-header-title {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      color: var(--text);
+    }
+    .mm-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 18px;
+      position: relative;
+    }
+    .mm-row + .mm-row::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 18px; right: 18px;
+      height: 1px;
+      background: var(--border);
+    }
+    .mm-main { flex: 1; min-width: 0; }
+    .mm-thumb {
+      width: 80px; height: 60px;
+      border-radius: 8px;
+      background: var(--bg);
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      overflow: hidden;
+    }
+    .mm-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.25;
+      letter-spacing: 0.3px;
+    }
+    .mm-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .mm-date {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-secondary);
+      font-weight: 600;
+      letter-spacing: 0.6px;
+    }
+    .mm-date::before {
+      content: '';
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--primary);
+      opacity: 0.85;
+    }
+    .mm-sub {
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+    .mm-sub::before {
+      content: '·';
+      margin-right: 6px;
+      color: var(--border);
+    }
+    .mm-btn {
+      flex-shrink: 0;
+      padding: 6px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--primary);
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: opacity .15s ease;
+    }
+    .mm-btn:active { opacity: 0.6; }
+    .mm-btn.primary {
+      color: var(--primary);
+    }
+
 
     /* Profile page */
     .profile-header {
@@ -942,6 +1150,10 @@
 
   <!-- ===== 首页 ===== -->
   <div class="page active" id="page-home">
+    <div class="app-bar on-dark">
+      
+      <span class="app-bar-title">学体联全国学生健康第一体育大赛</span>
+    </div>
     <div class="home-header">
       <div class="home-header-top">
         <div class="home-header-user">
@@ -972,55 +1184,67 @@
           <span class="star-num">89颗⭐</span>
         </div>
       </div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-value">320</div>
+          <div class="stat-label">赛季积分</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">4</div>
+          <div class="stat-label">参赛</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">2</div>
+          <div class="stat-label">奖项</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">#12</div>
+          <div class="stat-label">年级排名</div>
+        </div>
+      </div>
     </div>
 
     <div class="section-header">
-      <div class="section-title">🪢 今日任务</div>
-    </div>
-    <div class="card task-card" style="position:relative;">
-      <a href="#" style="position:absolute;top:16px;right:16px;font-size:13px;color:#1B6F3D;font-weight:600;text-decoration:none;">任务记录 ›</a>
-      <div class="task-title">跳绳训练</div>
-      <div class="task-groups">
-        <div class="task-group current" style="background:none;border:none;font-size:16px;">5 分钟跳绳 · 3 组</div>
-      </div>
-      <div class="task-actions">
-        <button class="btn btn-primary">去完成</button>
-      </div>
-    </div>
-
-    <div class="section-header">
-      <div class="section-title">📅 我的赛程</div>
+      <div class="section-title">我的比赛</div>
       <a href="#" class="section-more">全部 ›</a>
     </div>
-    <div class="card schedule-list">
-      <div class="schedule-item">
-        <div class="schedule-icon">🏃</div>
-        <div class="schedule-info">
-          <div class="name">短跑 100m 预选赛</div>
-          <div class="meta">05-28 · 15:30</div>
+    <div class="my-match-card">
+      <div class="mm-row">
+        <div class="mm-thumb">🪢</div>
+        <div class="mm-main">
+          <div class="mm-name">每日积分赛</div>
+          <div class="mm-meta">
+            <span class="mm-date">06 / 05</span>
+            <span class="mm-sub">5分钟跳绳 × 3组</span>
+          </div>
         </div>
-        <span class="schedule-status" style="background:#F3F4F6;color:#666;">详情</span>
+        <button class="mm-btn primary">去完成</button>
       </div>
-      <div class="schedule-item">
-        <div class="schedule-icon">🪢</div>
-        <div class="schedule-info">
-          <div class="name">跳绳团体赛</div>
-          <div class="meta">06-10 · 报名中</div>
+      <div class="mm-row">
+        <div class="mm-thumb">⚽</div>
+        <div class="mm-main">
+          <div class="mm-name">8人制足球赛</div>
+          <div class="mm-meta">
+            <span class="mm-date">06 / 16</span>
+          </div>
         </div>
-        <span class="schedule-status" style="background:#F3F4F6;color:#666;">详情</span>
+        <button class="mm-btn">详情</button>
       </div>
-      <div class="schedule-item">
-        <div class="schedule-icon">🏀</div>
-        <div class="schedule-info">
-          <div class="name">三人篮球 · 周末赛</div>
-          <div class="meta">06-05 · 09:00</div>
+      <div class="mm-row">
+        <div class="mm-thumb">🏃</div>
+        <div class="mm-main">
+          <div class="mm-name">男子1000米跑</div>
+          <div class="mm-meta">
+            <span class="mm-date">07 / 03</span>
+          </div>
         </div>
-        <span class="schedule-status" style="background:#F3F4F6;color:#666;">详情</span>
+        <button class="mm-btn">详情</button>
       </div>
     </div>
 
+
     <div class="section-header">
-      <div class="section-title">📢 公告</div>
+      <div class="section-title">公告</div>
       <a href="#" class="section-more">更多 ›</a>
     </div>
     <div class="card">
@@ -1043,7 +1267,7 @@
     </div>
 
     <div class="section-header">
-      <div class="section-title">📰 新闻</div>
+      <div class="section-title">新闻</div>
       <a href="#" class="section-more">更多 ›</a>
     </div>
     <div class="card">
@@ -1065,34 +1289,44 @@
         <div class="news-thumb">🏀</div>
         <div class="news-content">
           <div class="news-title">三人篮球联赛新规则解读：这些变化你必须知道</div>
-          <div class="news-meta"><span>赛事资讯</span><span>9千阅读</span></div>
+          <div class="news-meta"><span>比赛资讯</span><span>9千阅读</span></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ===== 赛事 ===== -->
+  <!-- ===== 比赛 ===== -->
   <div class="page" id="page-events">
-    <div class="search-box">
-      <input type="text" placeholder="请输入比赛名称">
+    <div class="app-bar">
+      
+      <span class="app-bar-title">学体联全国学生健康第一体育大赛</span>
     </div>
-    <div class="filter-tabs">
-      <button class="filter-tab active">全部</button>
-      <button class="filter-tab">报名中</button>
-      <button class="filter-tab">已报名</button>
-      <button class="filter-tab">进行中</button>
+    <div class="stage-tabs">
+      <button class="stage-tab active">校内积分赛</button>
+      <button class="stage-tab">区域晋级赛</button>
+      <button class="stage-tab">全国总决赛</button>
+      <button class="stage-tab">我的比赛</button>
+    </div>
+    <div class="filter-row" style="display:flex;align-items:center;gap:10px;padding:10px 16px;">
+      <div class="filter-tabs" style="padding:0;flex:0 0 auto;">
+        <button class="filter-tab active">全部</button>
+        <button class="filter-tab">进行中</button>
+        <button class="filter-tab">已结束</button>
+      </div>
+      <div class="search-box" style="margin:0;flex:1;min-width:0;">
+        <input type="text" placeholder="请输入比赛名称">
+      </div>
     </div>
 
     <div class="card event-card">
       <div class="event-body">
-        <div class="event-icon">🏃</div>
+        <div class="event-icon">⭐</div>
         <div class="event-info">
           <div class="event-header-row">
-            <div class="event-name">短跑 100m 预选赛</div>
+            <div class="event-name">每日积分赛</div>
             <span class="event-status" style="background:#DCFCE7;color:#16A34A;">已报名</span>
           </div>
-          <div class="event-meta">📍 北京 · 05-28 比赛</div>
-          <div class="event-points">⚡ +10 报名积分</div>
+          <div class="event-meta">体育课 ｜ 大课间 ｜ 体育作业</div>
         </div>
       </div>
       <div class="event-actions-bar">
@@ -1104,33 +1338,14 @@
 
     <div class="card event-card">
       <div class="event-body">
-        <div class="event-icon">🏊</div>
+        <div class="event-icon">⚽</div>
         <div class="event-info">
           <div class="event-header-row">
-            <div class="event-name">游泳接力赛</div>
-            <span class="event-status" style="background:#DBEAFE;color:#3B82F6;">可报名</span>
+            <div class="event-name">8人制足球赛</div>
+            <span class="event-status" style="background:#DCFCE7;color:#16A34A;">进行中</span>
           </div>
-          <div class="event-meta">📍 北京 · 06-15 截止报名</div>
+          <div class="event-meta">北京 · 06-15 截止报名</div>
           <div class="event-points">⚡ +100 冠军积分</div>
-        </div>
-      </div>
-      <div class="event-actions-bar">
-        <button class="action-btn">查看详情</button>
-        <div class="action-divider"></div>
-        <button class="action-btn primary">立即报名</button>
-      </div>
-    </div>
-
-    <div class="card event-card">
-      <div class="event-body">
-        <div class="event-icon">🏀</div>
-        <div class="event-info">
-          <div class="event-header-row">
-            <div class="event-name">三人篮球联赛</div>
-            <span class="event-status" style="background:#DBEAFE;color:#3B82F6;">可报名</span>
-          </div>
-          <div class="event-meta">📍 北京 · 06-05 比赛</div>
-          <div class="event-points">⚡ +80 冠军积分</div>
         </div>
       </div>
       <div class="event-actions-bar">
@@ -1145,10 +1360,29 @@
         <div class="event-icon">🪢</div>
         <div class="event-info">
           <div class="event-header-row">
-            <div class="event-name">跳绳团体赛</div>
-            <span class="event-status" style="background:#FEF3C7;color:#B45309;">待确认</span>
+            <div class="event-name">1分钟跳绳比赛</div>
+            <span class="event-status" style="background:#DCFCE7;color:#16A34A;">进行中</span>
           </div>
-          <div class="event-meta">📍 北京 · 06-10 截止</div>
+          <div class="event-meta">北京 · 06-05 比赛</div>
+          <div class="event-points">⚡ +80 冠军积分</div>
+        </div>
+      </div>
+      <div class="event-actions-bar">
+        <button class="action-btn">查看详情</button>
+        <div class="action-divider"></div>
+        <button class="action-btn primary">立即报名</button>
+      </div>
+    </div>
+
+    <div class="card event-card">
+      <div class="event-body">
+        <div class="event-icon">🏃</div>
+        <div class="event-info">
+          <div class="event-header-row">
+            <div class="event-name">男子1000米跑</div>
+            <span class="event-status" style="background:#DCFCE7;color:#16A34A;">进行中</span>
+          </div>
+          <div class="event-meta">北京 · 06-10 截止</div>
           <div class="event-points">⚡ +10 参与积分</div>
         </div>
       </div>
@@ -1161,13 +1395,13 @@
 
     <div class="card event-card">
       <div class="event-body">
-        <div class="event-icon">🏐</div>
+        <div class="event-icon">🏃‍♀️</div>
         <div class="event-info">
           <div class="event-header-row">
-            <div class="event-name">排球友谊赛</div>
-            <span class="event-status" style="background:#DBEAFE;color:#3B82F6;">可报名</span>
+            <div class="event-name">女子800m跑</div>
+            <span class="event-status" style="background:#DCFCE7;color:#16A34A;">进行中</span>
           </div>
-          <div class="event-meta">📍 通州 · 06-22 比赛</div>
+          <div class="event-meta">通州 · 06-22 比赛</div>
           <div class="event-points">⚡ +60 冠军积分</div>
         </div>
       </div>
@@ -1195,38 +1429,17 @@
         <div class="digital-avatar">🧍</div>
         <span class="digital-label">数字孪生</span>
       </div>
-      <div class="profile-stats-row">
-        <div class="profile-stat">
-          <div class="num">1732</div>
-          <div class="lab">总积分</div>
-        </div>
-        <div class="profile-stat">
-          <div class="num">320</div>
-          <div class="lab">赛季积分</div>
-        </div>
-        <div class="profile-stat">
-          <div class="num">4</div>
-          <div class="lab">参赛</div>
-        </div>
-        <div class="profile-stat">
-          <div class="num">2</div>
-          <div class="lab">奖项</div>
-        </div>
-        <div class="profile-stat">
-          <div class="num">#12</div>
-          <div class="lab">年级排名</div>
-        </div>
-      </div>
+      <div class="profile-stats-row"></div>
     </div>
 
     <div class="quick-entries" style="margin-top:8px;">
       <div class="quick-entry">
         <div class="quick-entry-icon" style="background:#DCFCE7;">🏃</div>
-        <div class="quick-entry-label">我的赛事</div>
+        <div class="quick-entry-label">我的比赛</div>
       </div>
       <div class="quick-entry">
         <div class="quick-entry-icon" style="background:#FEF3C7;">📜</div>
-        <div class="quick-entry-label">我的证书</div>
+        <div class="quick-entry-label">我的荣誉</div>
       </div>
       <div class="quick-entry">
         <div class="quick-entry-icon" style="background:#F3E8FF;">🧠</div>
@@ -1242,22 +1455,22 @@
       </div>
       <div class="quick-entry">
         <div class="quick-entry-icon" style="background:#ECFCCB;">📹</div>
-        <div class="quick-entry-label">课程中心</div>
+        <div class="quick-entry-label">课程教材</div>
       </div>
       <div class="quick-entry">
         <div class="quick-entry-icon" style="background:#CFFAFE;">🎒</div>
-        <div class="quick-entry-label">装备中心</div>
+        <div class="quick-entry-label">体育装备</div>
       </div>
       <div class="quick-entry">
         <div class="quick-entry-icon" style="background:#FEE2E2;">🎁</div>
-        <div class="quick-entry-label">积分兑换</div>
+        <div class="quick-entry-label">能量币</div>
       </div>
     </div>
 
 
 
     <div class="section-header">
-      <div class="section-title">❤️ 我的健康数据</div>
+      <div class="section-title">我的数据</div>
       <div class="health-date" onclick="alert('健康日历功能即将上线')">
         <span id="healthDate">05-29</span>
         <span style="font-size:16px;">📅</span>
@@ -1300,7 +1513,7 @@
     </div>
 
     <div class="radar-section">
-      <h4>身体素质 · 五维雷达图</h4>
+      <h4>身心素质评估</h4>
       <canvas id="radarCanvas" width="300" height="260"></canvas>
     </div>
 
@@ -1395,7 +1608,7 @@
     <div class="expand-more-btn" onclick="toggleCategories()">展开更多</div>
 
     <div class="section-header">
-      <div class="section-title">🤖 AI运动</div>
+      <div class="section-title">AI运动</div>
     </div>
     <div class="ai-sport-grid">
       <div class="ai-sport-card">
@@ -1438,14 +1651,14 @@
 
     <div class="equip-section">
       <div class="equip-header">
-        <h3>📱 我的装备</h3>
+        <h3>我的装备</h3>
         <a href="#" class="add-btn">+ 新增</a>
       </div>
       <div class="equip-list">
         <div class="equip-item">
           <div class="equip-icon">⌚</div>
           <div class="equip-info">
-            <div class="equip-name">体评手Pro</div>
+            <div class="equip-name">体评学具 星耀版</div>
             <div class="equip-desc">通信设备 · 上次同步 10 分钟前</div>
           </div>
           <span class="equip-status connected">已连接</span>
@@ -1478,8 +1691,7 @@
     </div>
 
     <div class="shop-entry" onclick="showShopModal()">
-      <h3>🛒 购买新装备</h3>
-      <p>点击前往合作商城选购运动装备</p>
+      <h3>京师体育官方商城</h3>
       <div class="shop-platforms">
         <span class="shop-platform">抖音商城</span>
         <span class="shop-platform">京东</span>
@@ -1488,7 +1700,7 @@
     </div>
 
     <div class="section-header">
-      <div class="section-title">⭐ 推荐装备</div>
+      <div class="section-title">推荐装备</div>
     </div>
     <div class="card">
       <div class="news-item">
@@ -1516,7 +1728,7 @@
     </button>
     <button class="nav-item" data-page="page-events">
       <span class="nav-icon">🏆</span>
-      <span>赛事</span>
+      <span>比赛</span>
     </button>
     <button class="nav-item" data-page="page-profile">
       <span class="nav-icon">🧑‍🎓</span>
@@ -1576,6 +1788,15 @@
       });
     });
   });
+  document.querySelectorAll('.stage-tabs').forEach(tabs => {
+    tabs.querySelectorAll('.stage-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.querySelectorAll('.stage-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  });
+
 
   // Quick nav pills
   document.querySelectorAll('.quick-nav').forEach(nav => {
@@ -1617,8 +1838,8 @@
     ctx.scale(dpr, dpr);
 
     const cx = 150, cy = 125, r = 80;
-    const labels = ['力量', '耐力', '速度', '灵敏', '柔韧'];
-    const values = [78, 85, 92, 80, 70];
+    const labels = ['力量', '耐力', '速度', '灵敏', '柔韧', '心理'];
+    const values = [78, 85, 92, 80, 70, 97];
     const max = 100;
     const n = labels.length;
 
